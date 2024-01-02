@@ -7,8 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <header>
       <div class="wrapper">
         <nav>
-          <RouterLink to="/">Events</RouterLink> |
-          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/">Graph</RouterLink>
         </nav>
       </div>
     </header>
@@ -17,13 +16,6 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style>
-#layout {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 nav {
   padding: 30px;
 }
@@ -36,5 +28,15 @@ nav a.router-link-exact-active {
 }
 h2 {
   font-size: 20px;
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  background: url('public/GAMA-Background.jpg'); /* Add your background image here */
+  background-size: cover; /* This will ensure that your background covers the whole area */
+  min-height: 100vh;
 }
 </style>

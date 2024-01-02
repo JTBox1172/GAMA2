@@ -39,6 +39,7 @@ onMounted(async () => {
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
+        .attr('class','graph-svg')
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
     var link = svg
@@ -132,9 +133,9 @@ onMounted(async () => {
             })
 
         node.attr('cx', function (d) {
-            return d.x + 6
+            return d.x 
         }).attr('cy', function (d) {
-            return d.y - 6
+            return d.y 
         })
     }
     var zoom = d3.zoom().on('zoom', (event) => {
@@ -153,7 +154,14 @@ onMounted(async () => {
 <style>
 #graphContainer {
     width: 100%;
-    height: 80vh;
+    padding: 0% 5%;
+    height: 85vh;
     overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.graph-svg{
+    background-color: rgba(0,0,0,0.8);
 }
 </style>

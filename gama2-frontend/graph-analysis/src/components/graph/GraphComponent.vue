@@ -62,6 +62,7 @@ function onsSuccessfulGraphRetrieval(response) {
 </script>
 
 <template>
+    <div class="graphControllerContainer">
     <div v-if="showfileSelectionButton" class="card">
         <div class="card-body">
             <div>Please Select the file(s) you would like to upload</div>
@@ -83,6 +84,16 @@ function onsSuccessfulGraphRetrieval(response) {
         @targetFormSubmission="targetFormSubmission"
     />
     <D3Graph v-if="buildGraph" :nodes="nodes" :edges="edges" />
+</div>
 </template>
 
-<style></style>
+<style scoped>
+.card {
+    background-color: rgba(255, 255, 255, 0.9);    
+    max-width: fit-content;
+    margin:0 auto;
+}
+.graphControllerContainer{
+    min-height: 100vh;
+}
+</style>
