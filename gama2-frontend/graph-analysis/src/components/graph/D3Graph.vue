@@ -1,9 +1,11 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import * as d3 from 'd3'
 import { useGraphData } from '../../stores/graphData'
+import BaseballCardComponent from '../baseball_card/BaseballCardComponent.vue'
 
 const graphData = useGraphData()
+let showBaseballCard = ref(false)
 
 // let tickCounter = 0
 // let maxTicks = 100
@@ -13,7 +15,6 @@ onMounted(async () => {
     const containerHeight = container.getBoundingClientRect().height
     const nodes = JSON.parse(JSON.stringify(graphData.graphNodes))
     const edges = JSON.parse(JSON.stringify(graphData.graphEdges))
-
     const color = d3.scaleOrdinal(d3.schemeCategory10)
 
     var margin = { top: 10, right: 30, bottom: 30, left: 40 },
@@ -42,6 +43,7 @@ onMounted(async () => {
         .append('circle')
         .attr('r', 5)
         .style('fill', (d) => color(d.Community))
+        .on('click', onNodeClicked)
 
     node.append('title').text((d) => d.id)
     node.call(
@@ -51,6 +53,12 @@ onMounted(async () => {
             .on('drag', dragged)
             .on('end', dragEnded)
     )
+    function onNodeClicked(event, node) {
+        console.log('node clicked', node.id)
+        event.stopPropagation()
+        graphData.updateViewNode(node.id)
+        showBaseballCard.value = true
+    }
     function dragStarted(event, d) {
         // maxTicks++
         if (!event.active) simulation.alphaTarget(0.3).restart() // Restarts the simulation with a low alpha target
@@ -65,7 +73,7 @@ onMounted(async () => {
     }
 
     function dragEnded(event, d) {
-        if (!event.active) simulation.alphaTarget(0) // Set the alpha target back to 0
+        if (!event.active) simulation.stop() // Set the alpha target back to 0
         // Optionally, uncomment the next two lines to unfix the position after dragging
         // d.fx = null;
         // d.fy = null;
@@ -83,6 +91,10 @@ onMounted(async () => {
         .force('charge', d3.forceManyBody().strength(-20)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
         .force('center', d3.forceCenter(width / 2, height / 2))
         .on('tick', ticked) // This force attracts nodes to the center of the svg area
+
+    setTimeout(() => {
+        simulation.stop()
+    }, 5000)
 
     function determineCharge(nodesLength) {
         let outputNum = -1
@@ -138,6 +150,9 @@ onMounted(async () => {
 
 <template>
     <div id="graphContainer"></div>
+    <div class="container" v-if="showBaseballCard">
+        <BaseballCardComponent />
+    </div>
 </template>
 
 <style>

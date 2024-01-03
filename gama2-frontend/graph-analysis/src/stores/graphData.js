@@ -5,6 +5,7 @@ export const useGraphData = defineStore('graphData', {
         graphNodes: [],
         graphEdges: [],
         showGraph: false,
+        viewNode: null,
     }),
     actions: {
         uploadNodes(nodes) {
@@ -15,6 +16,12 @@ export const useGraphData = defineStore('graphData', {
         },
         updateShowGraph() {
             this.showGraph = !this.showGraph
+        },
+        updateViewNode(node) {
+            this.viewNode = node
+        },
+        getViewNode() {
+            return this.viewNode
         },
     },
 })

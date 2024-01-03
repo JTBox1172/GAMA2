@@ -1,6 +1,6 @@
 <script setup>
 import graphService from '../../services/graphServices/graphService.js'
-import TargetFormComponent from '@/components/graph/TargetFormComponent.vue'
+import TargetFormComponent from '@/components/data_upload/TargetFormComponent.vue'
 import { ref, onMounted } from 'vue'
 import { useGraphData } from '../../stores/graphData'
 import { useRouter } from 'vue-router'
