@@ -1,34 +1,20 @@
 <script setup>
 import { onMounted } from 'vue'
 import * as d3 from 'd3'
+import { useGraphData } from '../../stores/graphData'
 
-const props = defineProps({
-    nodes: {
-        type: Array,
-        required: true,
-    },
-    edges: {
-        type: Array,
-        required: true,
-    },
-})
-let data = {
-    nodes: props.nodes,
-    links: props.edges,
-}
+const graphData = useGraphData()
+
 let tickCounter = 0
-let maxTicks = 100
+let maxTicks = 60
 onMounted(async () => {
     const container = document.getElementById('graphContainer')
     const containerWidth = container.getBoundingClientRect().width
     const containerHeight = container.getBoundingClientRect().height
-    console.log(containerWidth)
-    console.log(containerHeight)
+    const nodes = JSON.parse(JSON.stringify(graphData.graphNodes))
+    const edges = JSON.parse(JSON.stringify(graphData.graphEdges))
 
     const color = d3.scaleOrdinal(d3.schemeCategory10)
-
-    const links = data.links.map((d) => ({ ...d }))
-    const nodes = data.nodes.map((d) => ({ ...d }))
 
     var margin = { top: 10, right: 30, bottom: 30, left: 40 },
         width = 928 - margin.left - margin.right,
@@ -39,7 +25,7 @@ onMounted(async () => {
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
-        .attr('class','graph-svg')
+        .attr('class', 'graph-svg')
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
     var link = svg
@@ -47,7 +33,7 @@ onMounted(async () => {
         .attr('stroke', '#999')
         .attr('stroke-opacity', 0.6)
         .selectAll()
-        .data(links)
+        .data(edges)
         .join('line')
     var node = svg
         .selectAll('circle')
@@ -55,7 +41,7 @@ onMounted(async () => {
         .enter()
         .append('circle')
         .attr('r', 5)
-        .style('fill', (d) => color(d.community))
+        .style('fill', (d) => color(d.Community))
 
     node.append('title').text((d) => d.id)
     node.call(
@@ -89,12 +75,12 @@ onMounted(async () => {
         .force(
             'link',
             d3
-                .forceLink(links) // This force provides links between nodes
+                .forceLink(edges) // This force provides links between nodes
                 .id(function (d) {
                     return d.id
                 }) // This provide  the id of a node
         )
-        .force('charge', d3.forceManyBody()) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+        .force('charge', d3.forceManyBody().strength(-20)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
         .force('center', d3.forceCenter(width / 2, height / 2))
         .on('tick', ticked) // This force attracts nodes to the center of the svg area
 
@@ -133,9 +119,9 @@ onMounted(async () => {
             })
 
         node.attr('cx', function (d) {
-            return d.x 
+            return d.x
         }).attr('cy', function (d) {
-            return d.y 
+            return d.y
         })
     }
     var zoom = d3.zoom().on('zoom', (event) => {
@@ -144,6 +130,10 @@ onMounted(async () => {
     })
 
     d3.select('svg').call(zoom)
+    function setInitialZoom() {
+        console.log('setting zoom')
+        // this function needs to be written to find the size of the graph and set the svg to fit the graph
+    }
 })
 </script>
 
@@ -161,7 +151,7 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
 }
-.graph-svg{
-    background-color: rgba(0,0,0,0.8);
+.graph-svg {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 </style>

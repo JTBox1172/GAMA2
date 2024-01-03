@@ -21,6 +21,7 @@ module.exports = {
                 tabWidth: 4,
             },
         ],
+        'no-multiple-empty-lines': 'off',
     },
     plugins: ['prettier'],
 }
