@@ -6,8 +6,8 @@ module.exports = {
     extends: [
         'plugin:vue/vue3-essential',
         'eslint:recommended',
-        '@vue/eslint-config-prettier',
         'prettier',
+        '@vue/eslint-config-prettier',
     ],
     parserOptions: {
         ecmaVersion: 'latest',
@@ -21,7 +21,7 @@ module.exports = {
                 tabWidth: 4,
             },
         ],
-        'no-multiple-empty-lines': 'off',
+        'no-multiple-empty-lines': ['error', { max: 4 }],
     },
     plugins: ['prettier'],
 }

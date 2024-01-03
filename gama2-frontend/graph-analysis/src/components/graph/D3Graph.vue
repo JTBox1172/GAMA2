@@ -5,8 +5,8 @@ import { useGraphData } from '../../stores/graphData'
 
 const graphData = useGraphData()
 
-let tickCounter = 0
-let maxTicks = 60
+// let tickCounter = 0
+// let maxTicks = 100
 onMounted(async () => {
     const container = document.getElementById('graphContainer')
     const containerWidth = container.getBoundingClientRect().width
@@ -51,24 +51,24 @@ onMounted(async () => {
             .on('drag', dragged)
             .on('end', dragEnded)
     )
-    function dragStarted(event) {
-        maxTicks = maxTicks + 100
-        if (!event.active) simulation.alphaTarget(0.3).restart()
-        event.subject.fx = event.subject.x
-        event.subject.fy = event.subject.y
-    }
-    // Update the subject (dragged node) position during drag.
-    function dragged(event) {
-        event.subject.fx = event.x
-        event.subject.fy = event.y
+    function dragStarted(event, d) {
+        // maxTicks++
+        if (!event.active) simulation.alphaTarget(0.3).restart() // Restarts the simulation with a low alpha target
+        d.fx = d.x // Fix the node's position
+        d.fy = d.y
     }
 
-    // Restore the target alpha so the simulation cools after dragging ends.
-    // Unfix the subject position now that it’s no longer being dragged.
-    function dragEnded(event) {
-        if (!event.active) simulation.alphaTarget(0)
-        event.subject.fx = null
-        event.subject.fy = null
+    function dragged(event, d) {
+        // maxTicks++
+        d.fx = event.x // Update the node's fixed position
+        d.fy = event.y
+    }
+
+    function dragEnded(event, d) {
+        if (!event.active) simulation.alphaTarget(0) // Set the alpha target back to 0
+        // Optionally, uncomment the next two lines to unfix the position after dragging
+        // d.fx = null;
+        // d.fy = null;
     }
     var simulation = d3
         .forceSimulation(nodes) // Force algorithm is applied to data.nodes
@@ -100,11 +100,10 @@ onMounted(async () => {
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     function ticked() {
-        tickCounter++
-        if (tickCounter > maxTicks) {
-            simulation.stop()
-        }
-        console.log('ticked func running')
+        // tickCounter++
+        // if (tickCounter > maxTicks) {
+        //     simulation.stop()
+        // }
         link.attr('x1', function (d) {
             return d.source.x
         })
@@ -124,8 +123,8 @@ onMounted(async () => {
             return d.y
         })
     }
+    simulation.alphaTarget(0.3)
     var zoom = d3.zoom().on('zoom', (event) => {
-        console.log('scroll event', event)
         svg.attr('transform', event.transform)
     })
 
